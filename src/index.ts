@@ -7,14 +7,16 @@ import { Post } from './entities/Post';
 
 
 const main = async() => {
-
     const orm = await MikroORM.init(mikroOromConfig);
-    const post = orm.em.create(Post,{title:"my first post"} as RequiredEntityData<Post>) ;
-    await orm.em.persistAndFlush(post);
-    console.log('--------------------------------sql 2 -------------------------')
-    await orm.em.nativeInsert(Post,{title:"my second post"} as RequiredEntityData<Post>)
+    await orm.getMigrator().up();
+    
+    const posts = await orm.em.find(Post,{})
+    console.log(posts)
+
 
 
 }
 
-main();
+main().catch(error => {
+    console.error(error)
+});
