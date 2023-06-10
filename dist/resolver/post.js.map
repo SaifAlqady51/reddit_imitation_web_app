@@ -1,0 +1,1 @@
+{"version":3,"file":"post.js","sourceRoot":"","sources":["../../src/resolver/post.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,2CAAwC;AACxC,+CAA+C;AAGxC,IAAM,YAAY,0BAAlB,MAAM,YAAY;IAErB,IAAI;QACA,OAAO,KAAK,CAAA;IAChB,CAAC;CACJ,CAAA;AAHG;IADC,IAAA,oBAAK,EAAC,GAAG,EAAE,CAAC,CAAC,WAAI,CAAC,CAAC;;;;wCAGnB;uBAJQ,YAAY;IADxB,IAAA,uBAAQ,GAAE;GACE,YAAY,CAKxB"}
