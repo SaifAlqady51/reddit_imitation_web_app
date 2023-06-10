@@ -1,5 +1,5 @@
 import { Entity,PrimaryKey,Property } from "@mikro-orm/core";
-import { Field, Int, ObjectType } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 
 // ObjectType is used to convert class into graphql type
 @ObjectType()
@@ -10,11 +10,12 @@ import { Field, Int, ObjectType } from "type-graphql";
 export class Post{
 
     // creating columns in Post table
-    @Field(() => Int)
+    // Field query is essential to convert to graphql type
+    @Field()
     @PrimaryKey()
     id!:number;
 
-    @Field(() => String)
+    @Field(() => String)  // String type with the date field is essential too
     @Property({type:'date'})
     createdAt = new Date();
 

@@ -8,26 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PostResolver = void 0;
-const Post_1 = require("../entities/Post");
+exports.HelloResolver = void 0;
 const type_graphql_1 = require("type-graphql");
-let PostResolver = exports.PostResolver = class PostResolver {
-    post({ em }) {
-        return em.find(Post_1.Post, {});
+let HelloResolver = exports.HelloResolver = class HelloResolver {
+    hello() {
+        return 'bye';
     }
 };
 __decorate([
-    (0, type_graphql_1.Query)(() => [Post_1.Post]),
-    __param(0, (0, type_graphql_1.Ctx)()),
+    (0, type_graphql_1.Query)(() => String),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], PostResolver.prototype, "post", null);
-exports.PostResolver = PostResolver = __decorate([
+], HelloResolver.prototype, "hello", null);
+exports.HelloResolver = HelloResolver = __decorate([
     (0, type_graphql_1.Resolver)()
-], PostResolver);
-//# sourceMappingURL=post.js.map
+], HelloResolver);
+//# sourceMappingURL=hello-resolver.js.map

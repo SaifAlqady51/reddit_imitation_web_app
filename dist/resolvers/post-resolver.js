@@ -30,4 +30,4 @@ __decorate([
 exports.PostResolver = PostResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], PostResolver);
-//# sourceMappingURL=post.js.map
+//# sourceMappingURL=post-resolver.js.map
