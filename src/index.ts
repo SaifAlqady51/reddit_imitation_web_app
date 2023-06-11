@@ -6,6 +6,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema } from 'type-graphql';
 import { PostResolver } from './resolvers/post-resolver';
 import { HelloResolver } from './resolvers/hello-resolver';
+import { UserResolver } from './resolvers/user-resolver';
 
 
 const main = async() => {
@@ -16,7 +17,7 @@ const main = async() => {
     //creating apollo server
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers:[PostResolver, HelloResolver],
+            resolvers:[PostResolver, HelloResolver,UserResolver],
             validate:false
         }),
         // context is a special object that is accessible by all the resolvers

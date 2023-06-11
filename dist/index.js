@@ -10,13 +10,14 @@ const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
 const post_resolver_1 = require("./resolvers/post-resolver");
 const hello_resolver_1 = require("./resolvers/hello-resolver");
+const user_resolver_1 = require("./resolvers/user-resolver");
 const main = async () => {
     const orm = await core_1.MikroORM.init(mikro_orm_config_1.default);
     await orm.getMigrator().up();
     const app = (0, express_1.default)();
     const apolloServer = new apollo_server_express_1.ApolloServer({
         schema: await (0, type_graphql_1.buildSchema)({
-            resolvers: [post_resolver_1.PostResolver, hello_resolver_1.HelloResolver],
+            resolvers: [post_resolver_1.PostResolver, hello_resolver_1.HelloResolver, user_resolver_1.UserResolver],
             validate: false
         }),
         context: () => ({ em: orm.em })
