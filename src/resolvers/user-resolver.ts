@@ -1,10 +1,11 @@
 import { RequiredEntityData } from "@mikro-orm/core";
-import { User } from "src/entities/User";
+import {User}  from "../entities/User"
 import { MyContext } from "src/types/MyContext-type";
-import { Arg, Ctx, Field, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
 import argon2 from 'argon2'
 
-class UsernameAndPasswordArgs {
+@InputType()
+class UsernameAndPasswordArgs {   // that class is used instead of the default Arg query
     @Field()
     username: string;
 
@@ -15,7 +16,7 @@ class UsernameAndPasswordArgs {
 
 @Resolver()
 export class UserResolver {
-    @Mutation()
+    @Mutation(() => User)
     async register(
         @Arg('options') options: UsernameAndPasswordArgs,
         @Ctx() {em}: MyContext

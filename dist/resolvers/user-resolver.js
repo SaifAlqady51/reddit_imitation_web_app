@@ -16,11 +16,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
-const User_1 = require("src/entities/User");
+const User_1 = require("../entities/User");
 const type_graphql_1 = require("type-graphql");
 const argon2_1 = __importDefault(require("argon2"));
-class UsernameAndPasswordArgs {
-}
+let UsernameAndPasswordArgs = class UsernameAndPasswordArgs {
+};
 __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
@@ -29,6 +29,9 @@ __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
 ], UsernameAndPasswordArgs.prototype, "password", void 0);
+UsernameAndPasswordArgs = __decorate([
+    (0, type_graphql_1.InputType)()
+], UsernameAndPasswordArgs);
 let UserResolver = exports.UserResolver = class UserResolver {
     async register(options, { em }) {
         const hashedPassword = await argon2_1.default.hash(options.password);
@@ -38,7 +41,7 @@ let UserResolver = exports.UserResolver = class UserResolver {
     }
 };
 __decorate([
-    (0, type_graphql_1.Mutation)(),
+    (0, type_graphql_1.Mutation)(() => User_1.User),
     __param(0, (0, type_graphql_1.Arg)('options')),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
