@@ -44,6 +44,7 @@ export class UserResolver {
         @Arg('options') options: UsernameAndPasswordArgs,
         @Ctx() {em}: MyContext
     ): Promise<UserResponse> {
+        // check if user entered a username less than 3 characters
         if(options.username.length < 3){
             return {
                 errors: [{
@@ -52,7 +53,7 @@ export class UserResolver {
                 }]
             }
         }
-
+        // check if user entered a password less than 8 characters
         if(options.password.length < 8 ){
             return {
                 errors: [{
@@ -62,13 +63,22 @@ export class UserResolver {
             }
         }
 
-
-        
         // using argon2 to decrypt the password
         const hashedPassword = await argon2.hash(options.password)
         // creating new user
         const user = em.create(User,{username:options.username, password: hashedPassword} as RequiredEntityData<User>)
-        await em.persistAndFlush(user)
+        try{
+            await em.persistAndFlush(user)
+        }catch(err){
+            if(err.code ==='23505'){
+                return {
+                    errors:[{
+                        field: 'username',
+                        message: 'taken username'
+                    }]
+                }
+            }
+        }
 
         return {user}
     }
