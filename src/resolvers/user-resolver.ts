@@ -86,7 +86,7 @@ export class UserResolver {
     @Mutation(() => UserResponse)
     async login(
         @Arg('options') options: UsernameAndPasswordArgs,
-        @Ctx() {em}: MyContext
+        @Ctx() {em,req}: MyContext
     ) : Promise<UserResponse>{
         // finding the user by its username
         const user = await em.findOne(User,{username: options.username})
@@ -112,6 +112,8 @@ export class UserResolver {
         }
 
     }
+    req.session!.userId = user.id
+
     // finally return a user after check the upper conditions
     return {user}
     }

@@ -7,13 +7,46 @@ import { buildSchema } from 'type-graphql';
 import { PostResolver } from './resolvers/post-resolver';
 import { HelloResolver } from './resolvers/hello-resolver';
 import { UserResolver } from './resolvers/user-resolver';
+import session from 'express-session'
+import { createClient } from 'redis';
+import RedisStore from 'connect-redis';
+import { MyContext } from './types/MyContext-type';
 
 
 const main = async() => {
+
     const orm = await MikroORM.init(mikroOromConfig);
     await orm.getMigrator().up();
+
     // starting express server
     const app = express();
+
+    // inialize client
+    const redisClient = createClient();
+
+    // initialize store
+    const redisStore = new RedisStore({
+        client: redisClient,
+        disableTouch:true
+    })
+
+    // inialize session storage
+    app.use(
+        session({
+            store:redisStore,
+            secret:'mysecret',
+            resave:false,
+            saveUninitialized:false,
+            cookie:{
+                maxAge: 1000 * 60 * 60 * 24 * 365 * 18, // 18 yeafs
+                httpOnly: true, // for security 
+                secure: __prod__, // coockie only works in https
+                sameSite:'lax' // for more about sameSite visit https://blog.heroku.com/chrome-changes-samesite-cookie
+            }
+
+        })
+    )
+
     //creating apollo server
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
@@ -21,7 +54,7 @@ const main = async() => {
             validate:false
         }),
         // context is a special object that is accessible by all the resolvers
-        context:() => ({em:orm.em})
+        context:({req,res}) : MyContext => ({em:orm.em,req,res})
     });
     // starting apollo server
     await apolloServer.start();
