@@ -11,6 +11,7 @@ import session from 'express-session'
 import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
 import { MyContext } from './types/MyContext-type';
+// import cors from 'cors'
 
 
 const main = async() => {
@@ -33,6 +34,7 @@ const main = async() => {
     // inialize session storage
     app.use(
         session({
+            name:'qid',
             store:redisStore,
             secret:'mysecret',
             resave:false,
@@ -41,11 +43,18 @@ const main = async() => {
                 maxAge: 1000 * 60 * 60 * 24 * 365 * 18, // 18 yeafs
                 httpOnly: true, // for security 
                 secure: __prod__, // coockie only works in https
-                sameSite:'lax' // for more about sameSite visit https://blog.heroku.com/chrome-changes-samesite-cookie
+                sameSite: "lax" // for more about sameSite visit https://blog.heroku.com/chrome-changes-samesite-cookie
             }
 
         })
     )
+    // app.use(
+    //     cors({
+    //         credentials:true,
+    //         origin:"https://studio.apollographql.com"
+
+    //     })
+    // )
 
     //creating apollo server
     const apolloServer = new ApolloServer({
