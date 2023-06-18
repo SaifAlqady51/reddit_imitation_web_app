@@ -112,9 +112,8 @@ export class UserResolver {
         }
 
     }
-    req.session!.userId = user.id
-
-    // finally return a user after check the upper conditions
-    return {user}
+        req.session!.userId  = user.id
+        // finally return a user after check the upper conditions
+        return {user}
     }
 }

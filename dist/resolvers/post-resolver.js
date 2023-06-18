@@ -11,6 +11,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
 const Post_1 = require("../entities/Post");
@@ -22,29 +31,35 @@ let PostResolver = exports.PostResolver = class PostResolver {
     post(id, { em }) {
         return em.findOne(Post_1.Post, { id });
     }
-    async createPost(title, { em }) {
-        const post = em.create(Post_1.Post, { title });
-        await em.persistAndFlush(post);
-        return post;
+    createPost(title, { em }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const post = em.create(Post_1.Post, { title });
+            yield em.persistAndFlush(post);
+            return post;
+        });
     }
-    async updatePost(id, title, { em }) {
-        const post = await em.findOne(Post_1.Post, { id });
-        if (!post) {
-            return null;
-        }
-        if (typeof title !== 'undefined') {
-            post.title = title;
-            await em.persistAndFlush(post);
-        }
-        return post;
+    updatePost(id, title, { em }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const post = yield em.findOne(Post_1.Post, { id });
+            if (!post) {
+                return null;
+            }
+            if (typeof title !== 'undefined') {
+                post.title = title;
+                yield em.persistAndFlush(post);
+            }
+            return post;
+        });
     }
-    async deletePost(id, { em }) {
-        const post = await em.findOne(Post_1.Post, { id });
-        if (!post) {
-            return false;
-        }
-        await em.nativeDelete(Post_1.Post, { id });
-        return true;
+    deletePost(id, { em }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const post = yield em.findOne(Post_1.Post, { id });
+            if (!post) {
+                return false;
+            }
+            yield em.nativeDelete(Post_1.Post, { id });
+            return true;
+        });
     }
 };
 __decorate([

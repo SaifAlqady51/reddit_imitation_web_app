@@ -7,11 +7,10 @@ import { buildSchema } from 'type-graphql';
 import { PostResolver } from './resolvers/post-resolver';
 import { HelloResolver } from './resolvers/hello-resolver';
 import { UserResolver } from './resolvers/user-resolver';
-import session from 'express-session'
-import { createClient } from 'redis';
-import RedisStore from 'connect-redis';
 import { MyContext } from './types/MyContext-type';
-// import cors from 'cors'
+import connectRedis from "connect-redis"
+import session from "express-session"
+import {createClient} from "redis"
 
 
 const main = async() => {
@@ -21,40 +20,35 @@ const main = async() => {
 
     // starting express server
     const app = express();
+    // @ts-ignore
+    const RedisStore = () => {( new connectRedis(session) )}
+    // @ts-ignore
+    let redisCleint =await createClient({legacyMode:true,host:'127.0.0.1',port: 6379}).connect();
 
-    // inialize client
-    const redisClient = createClient();
-
-    // initialize store
-    const redisStore = new RedisStore({
-        client: redisClient,
-        disableTouch:true
-    })
-
-    // inialize session storage
+// Initialize sesssion storage.
     app.use(
         session({
             name:'qid',
-            store:redisStore,
-            secret:'mysecret',
-            resave:false,
-            saveUninitialized:false,
+            // @ts-ignore
+            store:  RedisStore({client:redisCleint,disableTouch:true}),
             cookie:{
-                maxAge: 1000 * 60 * 60 * 24 * 365 * 18, // 18 yeafs
-                httpOnly: true, // for security 
-                secure: __prod__, // coockie only works in https
-                sameSite: "lax" // for more about sameSite visit https://blog.heroku.com/chrome-changes-samesite-cookie
-            }
-
+                maxAge:1000* 60* 60* 24 * 365 * 18,
+                httpOnly:true,
+                secure:__prod__,
+                sameSite:'lax',
+            },
+            resave: false, // required: force lightweight session keep alive (touch)
+            saveUninitialized: false, // recommended: only save session when data exists
+            secret: "keyboardcat",
         })
     )
-    // app.use(
-    //     cors({
-    //         credentials:true,
-    //         origin:"https://studio.apollographql.com"
 
-    //     })
-    // )
+    // inialize session storage
+
+    const cors = {
+        credentials:true,
+        origin: "https://studio.apollographql.com"
+    }
 
     //creating apollo server
     const apolloServer = new ApolloServer({
@@ -68,7 +62,7 @@ const main = async() => {
     // starting apollo server
     await apolloServer.start();
     // apply apollo server with express
-    apolloServer.applyMiddleware({app})
+    apolloServer.applyMiddleware({app,cors})
 
     app.listen(4000, () => {
         console.log('listening on port 4000')
